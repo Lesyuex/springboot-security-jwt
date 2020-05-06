@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jobeth.mapper.PermissionMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jobeth.po.Permission">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="resource" property="resource"/>
+        <result column="type" property="type"/>
+        <result column="icon" property="icon"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="component" property="component"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="enabled" property="enabled"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, resource, type, icon, parent_id, component, remark, create_time, update_time, enabled
+    </sql>
+    <select id="listPermissionByMap" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+        select id,
+        name,
+        path,
+        type,
+        icon,
+        parent_id,
+        component,
+        remark,
+        create_time,
+        update_time,
+        enabled
+        from sys_permission p
+        left join sys_roles_permissions rp on p.id = rp.perm_id
+        left join sys_users_roles ur on rp.role_id = ur.role_id
+        <where>
+            <if test="type != null and type !=''">
+                and p.type = #{type}
+            </if>
+            <if test="userId != null and userId !=''">
+                and ur.user_id = #{userId}
+            </if>
+        </where>
+
+
+    </select>
+
+</mapper>
